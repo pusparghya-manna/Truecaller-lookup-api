@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: truecaller-lookup-api
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: TRUECALLER_API_KEY
+        sync: false
+      - key: TRUECALLER_COOKIES_JSON
+        sync: false
+      - key: API_ANYTHING_HOME
+        value: /tmp/api-anything

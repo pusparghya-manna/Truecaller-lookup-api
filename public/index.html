@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Truecaller Lookup API</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; background: #07111f; color: #e7eef9; }
+    main { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
+    .eyebrow { color: #68a7ff; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
+    h1 { font-size: clamp(32px, 6vw, 64px); line-height: 1; margin: 14px 0; max-width: 700px; }
+    .intro { color: #9eb0c8; max-width: 650px; font-size: 17px; line-height: 1.6; }
+    .panel { margin-top: 32px; padding: 24px; border: 1px solid #203554; border-radius: 20px; background: #0d1b2d; box-shadow: 0 18px 60px #0005; }
+    label { display: block; color: #aac0db; font-size: 13px; margin: 0 0 8px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    input { flex: 1 1 260px; min-width: 0; border: 1px solid #345071; border-radius: 12px; padding: 14px 16px; color: #fff; background: #07111f; font-size: 16px; }
+    button { border: 0; border-radius: 12px; padding: 14px 20px; background: #3b8cff; color: white; font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    #status { min-height: 24px; margin-top: 16px; color: #9eb0c8; }
+    pre { overflow: auto; margin: 18px 0 0; padding: 18px; border-radius: 12px; background: #050b13; color: #b9e1ff; line-height: 1.5; }
+    code { color: #c7ddff; }
+    .note { color: #8094ad; font-size: 13px; line-height: 1.5; margin-top: 22px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Private local wrapper</div>
+    <h1>Truecaller lookup API</h1>
+    <p class="intro">Search an Indian phone number through the authenticated Truecaller session stored on this machine. Your Truecaller cookies stay server-side; the browser only receives the JSON response.</p>
+    <section class="panel">
+      <label for="key">API key</label>
+      <input id="key" type="password" autocomplete="off" placeholder="Paste the server API key">
+      <label for="number" style="margin-top:16px">Indian mobile number</label>
+      <div class="row">
+        <input id="number" inputmode="tel" value="+91 9123731945" placeholder="+91 9123731945">
+        <button id="search">Search</button>
+      </div>
+      <div id="status"></div>
+      <pre id="result">Results will appear here.</pre>
+    </section>
+    <p class="note">Endpoint: <code>GET /api/search?number=+919123731945</code> with the <code>x-api-key</code> header. Use only for numbers and data you are authorized to look up, and follow Truecaller’s terms and rate limits.</p>
+  </main>
+  <script>
+    const key = document.querySelector('#key');
+    const number = document.querySelector('#number');
+    const button = document.querySelector('#search');
+    const status = document.querySelector('#status');
+    const result = document.querySelector('#result');
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      status.textContent = 'Looking up…';
+      result.textContent = '';
+      try {
+        const response = await fetch('/api/search?number=' + encodeURIComponent(number.value), { headers: { 'x-api-key': key.value } });
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+        status.textContent = response.ok ? 'Lookup complete.' : 'Lookup failed.';
+      } catch (error) {
+        status.textContent = 'Network error.';
+        result.textContent = String(error);
+      } finally { button.disabled = false; }
+    });
+  </script>
+</body>
+</html>

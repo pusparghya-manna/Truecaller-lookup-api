@@ -1,0 +1,5 @@
+.env
+.env.*
+.api-anything
+node_modules
+*.zip
