@@ -19,5 +19,5 @@ RUN chmod 755 /app/entrypoint.sh
 ENV API_ANYTHING_HOME=/tmp/api-anything
 ENV API_ANYTHING_CLI=/opt/api-anything/dist/cli.js
 ENV API_ANYTHING_CWD=/opt/api-anything
-EXPOSE 10000
+EXPOSE 8080
 CMD ["/app/entrypoint.sh"]

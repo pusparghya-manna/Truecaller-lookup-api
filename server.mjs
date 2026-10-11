@@ -11,12 +11,11 @@ const publicDir = join(__dirname, 'public');
 const apiAnythingHome = process.env.API_ANYTHING_HOME || '/home/ubuntu/.api-anything-truecaller';
 const apiAnythingCli = process.env.API_ANYTHING_CLI || '/opt/api-anything/dist/cli.js';
 const apiAnythingCwd = process.env.API_ANYTHING_CWD || '/opt/api-anything';
-const apiKey = process.env.TRUECALLER_API_KEY;
+const apiKey = process.env.TRUECALLER_API_KEY || '';
 const port = Number(process.env.PORT || 8787);
 
 if (!apiKey) {
-  console.error('TRUECALLER_API_KEY is required');
-  process.exit(1);
+  console.warn('TRUECALLER_API_KEY is not set — /health will work, /api/search will return 503 until you set it in Railway Variables.');
 }
 
 let lastCallAt = 0;
@@ -145,6 +144,7 @@ const server = http.createServer(async (req, res) => {
   const legacy = legacyPathParams(url.pathname);
   if (url.pathname === '/api/search' || legacy) {
     const suppliedKey = req.headers['x-api-key'] || legacy?.key;
+    if (!apiKey) return json(res, 503, { ok: false, error: 'Server misconfigured: TRUECALLER_API_KEY is not set in environment variables.' });
     if (suppliedKey !== apiKey) return json(res, 401, { ok: false, error: 'Missing or invalid API key.' });
     try {
       const input = legacy ? legacy : req.method === 'POST' ? await body(req) : Object.fromEntries(url.searchParams);

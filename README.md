@@ -1,40 +1,45 @@
-# Truecaller Lookup API — Render deployment
+# Truecaller Lookup API — Railway deployment
 
-This project contains the complete API wrapper and web UI. It runs API Anything inside a Docker container with Chromium and imports the Truecaller session from a private Render environment variable at startup.
+Docker-based Truecaller lookup API + simple web UI. Uses API Anything + Chromium inside the container and imports your Truecaller session from a private environment variable at startup.
 
-## Deploy
+## Deploy on Railway
 
-1. Create a new **Docker** service on Railway from this project or upload the repository contents to GitHub. Railway must detect and build the included `Dockerfile`; do not deploy it as a plain Node.js service.
-2. The Docker build installs API Anything at `/opt/api-anything` and runs its CLI directly through Node, so it does not depend on a global `PATH` entry.
-3. Add these environment variables in Render’s private Environment settings:
-   - `TRUECALLER_API_KEY`: a long random API key for your callers.
-   - `TRUECALLER_COOKIES_JSON`: a Cookie-Editor/Playwright JSON export containing your own Truecaller cookies.
-   - `API_ANYTHING_HOME=/tmp/api-anything`.
-4. Deploy. The service health check is `GET /health`.
-5. Use the service URL in the browser UI or call `GET /api/search?number=...` with the `x-api-key` header.
+1. Create a new project → **Deploy from GitHub** (this repo) or upload the files.
+2. Railway must build with the included **Dockerfile** (Docker runtime). Do not use a plain Node.js start command.
+3. In the service → **Variables**, add:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `TRUECALLER_API_KEY` | Yes | Long random secret your clients send as `x-api-key` |
+| `TRUECALLER_COOKIES_JSON` | Yes (for lookups) | Cookie-Editor / Playwright JSON export of your Truecaller session |
+| `API_ANYTHING_HOME` | Optional | Default `/tmp/api-anything` |
+| `API_ANYTHING_CLI` | Optional | Default `/opt/api-anything/dist/cli.js` |
+| `API_ANYTHING_CWD` | Optional | Default `/opt/api-anything` |
+
+4. Health check path: `/health` (already returns `{"ok":true}`).
+5. After deploy, open the public URL. The server listens on Railway’s `$PORT`.
+
+**Important:** The service will start and pass health checks even if the two secrets are missing. Lookups return 503/401 until you set them.
 
 ## API example
 
 ```sh
-curl --get 'https://YOUR-RENDER-SERVICE.onrender.com/api/search' \\
-  -H 'x-api-key: YOUR_TRUECALLER_API_KEY' \\
+curl --get 'https://YOUR-SERVICE.up.railway.app/api/search' \
+  -H 'x-api-key: YOUR_TRUECALLER_API_KEY' \
   --data-urlencode 'number=+919123731945'
 ```
 
-For compatibility with your requested format, the service also accepts:
+Also accepts the path form:
 
 ```text
-https://YOUR-RENDER-SERVICE.onrender.com/api/key=YOUR_TRUECALLER_API_KEY/num=919123731945
+https://YOUR-SERVICE.up.railway.app/api/key=YOUR_TRUECALLER_API_KEY/num=919123731945
 ```
 
-The header-based form is safer because URLs are commonly stored in browser history, proxy logs,
-analytics, and server access logs. Use the path form only when a client cannot send headers.
+Prefer the header form (safer for logs/history).
 
-## Authentication and security
+## Cookie formats accepted
 
-The real cookie export is intentionally **not included** in this zip. Put it only into Render’s encrypted/private environment settings. Never commit it to GitHub, put it in the frontend, or share it in chat.
-
-The startup script accepts either of these formats:
+Array:
 
 ```json
 [
@@ -42,7 +47,7 @@ The startup script accepts either of these formats:
 ]
 ```
 
-or the browser-export wrapper format:
+Or browser-export wrapper (only the `cookies` object is used):
 
 ```json
 {
@@ -55,8 +60,8 @@ or the browser-export wrapper format:
 }
 ```
 
-For the wrapper format, the script uses only the `cookies` map and supplies the Truecaller domain/path defaults. `localStorage` and `sessionStorage` are ignored by API Anything’s cookie importer.
+Never commit real cookies or the API key. Put them only in Railway Variables (secrets).
 
-Truecaller sessions can expire, and Render instances may restart. The container re-imports `TRUECALLER_COOKIES_JSON` on every startup. If Truecaller rejects the session, export a fresh session from your own browser and replace the Render secret.
+Sessions expire. On every restart the container re-imports `TRUECALLER_COOKIES_JSON`. If lookups start failing, export a fresh session and update the variable.
 
-This is a session-backed wrapper, not an official Truecaller API. Use only for authorized lookups, follow Truecaller’s terms and rate limits, and protect the API key.
+This is a session-backed wrapper, not an official Truecaller API. Use only for authorized lookups and respect Truecaller’s terms and rate limits.
