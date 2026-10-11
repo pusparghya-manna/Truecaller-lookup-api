@@ -4,8 +4,8 @@ This project contains the complete API wrapper and web UI. It runs API Anything 
 
 ## Deploy
 
-1. Create a new **Web Service** on Render from this project or upload the repository contents to GitHub.
-2. Select **Docker** runtime. `render.yaml` is included for Blueprint deployment.
+1. Create a new **Docker** service on Railway from this project or upload the repository contents to GitHub. Railway must detect and build the included `Dockerfile`; do not deploy it as a plain Node.js service.
+2. The Docker build installs API Anything at `/opt/api-anything` and runs its CLI directly through Node, so it does not depend on a global `PATH` entry.
 3. Add these environment variables in Render’s private Environment settings:
    - `TRUECALLER_API_KEY`: a long random API key for your callers.
    - `TRUECALLER_COOKIES_JSON`: a Cookie-Editor/Playwright JSON export containing your own Truecaller cookies.

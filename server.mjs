@@ -9,6 +9,8 @@ const execFileAsync = promisify(execFile);
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const publicDir = join(__dirname, 'public');
 const apiAnythingHome = process.env.API_ANYTHING_HOME || '/home/ubuntu/.api-anything-truecaller';
+const apiAnythingCli = process.env.API_ANYTHING_CLI || '/opt/api-anything/dist/cli.js';
+const apiAnythingCwd = process.env.API_ANYTHING_CWD || '/opt/api-anything';
 const apiKey = process.env.TRUECALLER_API_KEY;
 const port = Number(process.env.PORT || 8787);
 
@@ -97,10 +99,10 @@ function runLookup(number) {
   callQueue = callQueue.then(async () => {
     await waitForPace();
     const { stdout } = await execFileAsync(
-      'api-anything',
-      ['call', 'truecaller', 'search', `number=${number}`],
+      process.execPath,
+      [apiAnythingCli, 'call', 'truecaller', 'search', `number=${number}`],
       {
-        cwd: '/home/ubuntu/api-anything',
+        cwd: apiAnythingCwd,
         env: { ...process.env, API_ANYTHING_HOME: apiAnythingHome },
         timeout: 90_000,
         maxBuffer: 2 * 1024 * 1024,

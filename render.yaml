@@ -11,3 +11,7 @@ services:
         sync: false
       - key: API_ANYTHING_HOME
         value: /tmp/api-anything
+      - key: API_ANYTHING_CLI
+        value: /opt/api-anything/dist/cli.js
+      - key: API_ANYTHING_CWD
+        value: /opt/api-anything
