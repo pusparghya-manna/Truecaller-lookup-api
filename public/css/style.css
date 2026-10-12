@@ -46,6 +46,11 @@ body {
   text-decoration: none;
 }
 .brand span { color: #0ea5e9; }
+.brand-logo {
+  display: block;
+  height: 32px;
+  width: auto;
+}
 
 /* Main – compact, no scroll */
 main {

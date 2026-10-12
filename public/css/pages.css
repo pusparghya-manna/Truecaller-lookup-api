@@ -26,6 +26,7 @@ body {
   text-decoration: none;
 }
 .brand span { color: #0ea5e9; }
+.brand-logo { display:block; height:30px; width:auto; }
 main {
   width: min(680px, calc(100% - 32px));
   margin: 24px auto 40px;
