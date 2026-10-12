@@ -87,6 +87,60 @@ function enrichResult(result) {
   };
 }
 
+
+function cleanAddress(value) {
+  if (typeof value !== 'string') return value ?? '';
+  // Remove trailing " ⸱ HH:MM" or " · HH:MM" style local-time suffixes from Truecaller
+  return value
+    .replace(/\s*[⸱·•]\s*\d{1,2}:\d{2}(?:\s*(?:AM|PM|am|pm))?\s*$/u, '')
+    .replace(/\s+\d{1,2}:\d{2}(?:\s*(?:AM|PM|am|pm))?\s*$/i, '')
+    .trim();
+}
+
+function toPublicNumber(e164OrDigits) {
+  const digits = String(e164OrDigits ?? '').replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2);
+  if (digits.length === 10) return digits;
+  return digits;
+}
+
+function formatLookupResponse(result, e164Number) {
+  const mobile = toPublicNumber(e164Number);
+  const items = Array.isArray(result?.data) ? result.data : [];
+  const hasName = items.some((item) => item && (item.name || item.email || item.profileImage));
+  const success = Boolean(result?.ok) && items.length > 0 && hasName;
+
+  if (!success) {
+    return {
+      status: 'failed',
+      number: mobile,
+      total: 0,
+      records: [],
+      developer: 'Pusparghya',
+    };
+  }
+
+  const records = items.map((item, index) => {
+    const addressRaw = item.address || item.businessTag || '';
+    return {
+      record_no: index + 1,
+      mobile,
+      name: item.name || '',
+      profileImage: item.profileImage || '',
+      address: cleanAddress(addressRaw),
+      email: item.email || '',
+    };
+  });
+
+  return {
+    status: 'success',
+    number: mobile,
+    total: records.length,
+    records,
+    developer: 'Pusparghya',
+  };
+}
+
 async function waitForPace() {
   const now = Date.now();
   const wait = Math.max(0, 1000 - (now - lastCallAt));
@@ -150,10 +204,18 @@ const server = http.createServer(async (req, res) => {
       const input = legacy ? legacy : req.method === 'POST' ? await body(req) : Object.fromEntries(url.searchParams);
       const number = normalizeIndianNumber(input.number);
       const result = await runLookup(number);
-      return json(res, result.ok ? 200 : 502, { ...result, number });
+      const formatted = formatLookupResponse(result, number);
+      return json(res, formatted.status === 'success' ? 200 : 404, formatted);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Lookup failed.';
-      return json(res, 400, { ok: false, error: message });
+      return json(res, 400, {
+        status: 'failed',
+        number: '',
+        total: 0,
+        records: [],
+        developer: 'Pusparghya',
+        error: message,
+      });
     }
   }
   return serveStatic(req, res, url.pathname);
