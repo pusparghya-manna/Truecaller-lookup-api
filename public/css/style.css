@@ -39,18 +39,24 @@ body {
   flex-shrink: 0;
 }
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 20px;
   font-weight: 700;
   color: var(--blue);
   letter-spacing: -0.02em;
   text-decoration: none;
 }
-.brand span { color: #0ea5e9; }
-.brand-logo {
-  display: block;
+.brand-icon {
+  width: 32px;
   height: 32px;
-  width: auto;
+  border-radius: 8px;
+  display: block;
+  flex-shrink: 0;
 }
+.brand-text { color: #0f172a; }
+.brand-text span { color: #0284ff; }
 
 /* Main – compact, no scroll */
 main {

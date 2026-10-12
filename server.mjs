@@ -177,12 +177,30 @@ async function body(req) {
 
 async function serveStatic(req, res, pathname) {
   const requested = pathname === '/' ? '/index.html' : pathname;
-  const file = normalize(join(publicDir, requested));
+  // Strip leading slash so join() does not ignore publicDir on absolute paths
+  const relative = requested.replace(/^\/+/, '');
+  const file = normalize(join(publicDir, relative));
   if (!file.startsWith(publicDir)) return json(res, 404, { error: 'Not found' });
   try {
     const content = await readFile(file);
-    const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8' };
-    res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
+    const types = {
+      '.html': 'text/html; charset=utf-8',
+      '.css': 'text/css; charset=utf-8',
+      '.js': 'text/javascript; charset=utf-8',
+      '.svg': 'image/svg+xml',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.webp': 'image/webp',
+      '.ico': 'image/x-icon',
+      '.json': 'application/json; charset=utf-8',
+      '.woff2': 'font/woff2',
+      '.txt': 'text/plain; charset=utf-8',
+    };
+    res.writeHead(200, {
+      'Content-Type': types[extname(file).toLowerCase()] || 'application/octet-stream',
+      'Cache-Control': 'public, max-age=3600',
+    });
     res.end(content);
   } catch {
     json(res, 404, { error: 'Not found' });
