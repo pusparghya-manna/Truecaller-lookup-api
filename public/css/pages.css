@@ -28,7 +28,7 @@ body {
   color: var(--blue);
   text-decoration: none;
 }
-.brand-icon { width: 28px; height: 28px; border-radius: 7px; display: block; }
+.brand-logo { width: 32px; height: 32px; border-radius: 8px; display: block; object-fit: cover; }
 .brand-text { color: #0f172a; }
 .brand-text span { color: #0284ff; }
 main {
