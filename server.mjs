@@ -199,7 +199,9 @@ async function serveStatic(req, res, pathname) {
     };
     res.writeHead(200, {
       'Content-Type': types[extname(file).toLowerCase()] || 'application/octet-stream',
-      'Cache-Control': 'public, max-age=3600',
+      'Cache-Control': ['.html', '.css', '.js'].includes(extname(file).toLowerCase())
+        ? 'no-store, no-cache, must-revalidate'
+        : 'public, max-age=3600',
     });
     res.end(content);
   } catch {
