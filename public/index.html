@@ -2,64 +2,508 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Truecaller Lookup API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TrueFind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; background: #07111f; color: #e7eef9; }
-    main { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
-    .eyebrow { color: #68a7ff; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; font-weight: 700; }
-    h1 { font-size: clamp(32px, 6vw, 64px); line-height: 1; margin: 14px 0; max-width: 700px; }
-    .intro { color: #9eb0c8; max-width: 650px; font-size: 17px; line-height: 1.6; }
-    .panel { margin-top: 32px; padding: 24px; border: 1px solid #203554; border-radius: 20px; background: #0d1b2d; box-shadow: 0 18px 60px #0005; }
-    label { display: block; color: #aac0db; font-size: 13px; margin: 0 0 8px; }
-    .row { display: flex; gap: 12px; flex-wrap: wrap; }
-    input { flex: 1 1 260px; min-width: 0; border: 1px solid #345071; border-radius: 12px; padding: 14px 16px; color: #fff; background: #07111f; font-size: 16px; }
-    button { border: 0; border-radius: 12px; padding: 14px 20px; background: #3b8cff; color: white; font-weight: 700; cursor: pointer; }
-    button:disabled { opacity: .55; cursor: wait; }
-    #status { min-height: 24px; margin-top: 16px; color: #9eb0c8; }
-    pre { overflow: auto; margin: 18px 0 0; padding: 18px; border-radius: 12px; background: #050b13; color: #b9e1ff; line-height: 1.5; }
-    code { color: #c7ddff; }
-    .note { color: #8094ad; font-size: 13px; line-height: 1.5; margin-top: 22px; }
+    :root {
+      --blue: #0084ff;
+      --blue-dark: #0066cc;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --footer: #0b3d91;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .menu-btn {
+      width: 36px; height: 36px;
+      border: 0; background: transparent;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      cursor: pointer; color: #374151;
+    }
+    .menu-btn:hover { background: #f3f4f6; }
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .brand span { color: #0ea5e9; }
+
+    /* Main */
+    main {
+      width: min(480px, 100%);
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+      flex: 1;
+    }
+
+    /* Search */
+    .search-wrap {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      padding: 6px 8px 6px 16px;
+      gap: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .prefix {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 15px;
+      user-select: none;
+    }
+    .search-wrap input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      font-size: 16px;
+      font-family: inherit;
+      padding: 10px 4px;
+      min-width: 0;
+      background: transparent;
+      color: var(--text);
+    }
+    .search-btn {
+      width: 42px; height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      display: grid; place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .search-btn:hover { background: var(--blue-dark); }
+    .search-btn:disabled { opacity: .6; cursor: wait; }
+
+    /* API key (compact) */
+    .key-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .key-row input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+    .key-row input:focus { border-color: var(--blue); }
+    .key-row label {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Status */
+    .status {
+      margin-top: 14px;
+      min-height: 20px;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .status.error { color: var(--danger); }
+    .status.ok { color: #059669; }
+
+    /* Result card */
+    .result-card {
+      margin-top: 20px;
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
+      overflow: hidden;
+      display: none;
+    }
+    .result-card.show { display: block; }
+
+    .profile {
+      padding: 28px 20px 20px;
+      text-align: center;
+    }
+    .avatar-wrap {
+      width: 88px; height: 88px;
+      margin: 0 auto 14px;
+      position: relative;
+    }
+    .avatar {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e5e7eb;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.1);
+    }
+    .avatar-fallback {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 32px;
+      font-weight: 700;
+      box-shadow: 0 2px 12px rgba(0,0,0,.1);
+    }
+    .badge {
+      position: absolute;
+      right: 0; bottom: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: grid; place-items: center;
+      border: 2px solid #fff;
+    }
+    .name {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    .mobile-line {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 0 16px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .info-cell {
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-cell:nth-child(odd) { border-right: 1px solid var(--border); }
+    .info-cell.full {
+      grid-column: 1 / -1;
+      border-right: 0;
+    }
+    .info-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .info-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    /* Empty / failed */
+    .empty-state {
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .empty-state .icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: #f3f4f6;
+      display: grid; place-items: center;
+      font-size: 28px;
+    }
+    .empty-state h3 {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-size: 17px;
+    }
+    .empty-state p { margin: 0; font-size: 14px; }
+
+    /* Footer */
+    footer {
+      background: var(--footer);
+      color: rgba(255,255,255,.85);
+      padding: 28px 16px 20px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: auto;
+    }
+    footer a {
+      color: rgba(255,255,255,.9);
+      text-decoration: none;
+      margin: 0 6px;
+    }
+    footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px 2px;
+      max-width: 520px;
+      margin: 0 auto 16px;
+    }
+    .copy {
+      opacity: .7;
+      margin-top: 8px;
+    }
+    .social {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .social a {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      display: grid; place-items: center;
+      font-size: 16px;
+    }
+
+    @media (max-width: 400px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .info-cell:nth-child(odd) { border-right: 0; }
+    }
   </style>
 </head>
 <body>
+  <header class="topbar">
+    <button class="menu-btn" type="button" aria-label="Menu" onclick="document.getElementById('key').focus()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <a class="brand" href="/">True<span>Find</span></a>
+  </header>
+
   <main>
-    <div class="eyebrow">Private local wrapper</div>
-    <h1>Truecaller lookup API</h1>
-    <p class="intro">Search an Indian phone number through the authenticated Truecaller session stored on this machine. Your Truecaller cookies stay server-side; the browser only receives the JSON response.</p>
-    <section class="panel">
+    <div class="search-wrap">
+      <span class="prefix">+91</span>
+      <input id="number" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Mobile number" maxlength="12" value="">
+      <button class="search-btn" id="search" type="button" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="key-row">
       <label for="key">API key</label>
-      <input id="key" type="password" autocomplete="off" placeholder="Paste the server API key">
-      <label for="number" style="margin-top:16px">Indian mobile number</label>
-      <div class="row">
-        <input id="number" inputmode="tel" value="+91 9123731945" placeholder="+91 9123731945">
-        <button id="search">Search</button>
-      </div>
-      <div id="status"></div>
-      <pre id="result">Results will appear here.</pre>
-    </section>
-    <p class="note">Endpoint: <code>GET /api/search?number=+919123731945</code> with the <code>x-api-key</code> header. Use only for numbers and data you are authorized to look up, and follow Truecaller’s terms and rate limits.</p>
+      <input id="key" type="password" autocomplete="off" placeholder="Enter your API key">
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="result-card" id="resultCard">
+      <!-- filled by JS -->
+    </div>
   </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookies</a>
+      <a href="#">Responsible Disclosure</a>
+      <a href="#">Directory</a>
+      <a href="#">Code of Conduct</a>
+    </div>
+    <div class="copy">© 2026 TrueFind · Developed by Pusparghya</div>
+    <div class="social">
+      <a href="#" aria-label="Telegram" title="Telegram">✈</a>
+      <a href="#" aria-label="Instagram" title="Instagram">📷</a>
+    </div>
+  </footer>
+
   <script>
-    const key = document.querySelector('#key');
-    const number = document.querySelector('#number');
-    const button = document.querySelector('#search');
-    const status = document.querySelector('#status');
-    const result = document.querySelector('#result');
-    button.addEventListener('click', async () => {
-      button.disabled = true;
-      status.textContent = 'Looking up…';
-      result.textContent = '';
+    const numberEl = document.getElementById('number');
+    const keyEl = document.getElementById('key');
+    const searchBtn = document.getElementById('search');
+    const statusEl = document.getElementById('status');
+    const resultCard = document.getElementById('resultCard');
+
+    // Restore key from session
+    try {
+      const saved = sessionStorage.getItem('truefind_key');
+      if (saved) keyEl.value = saved;
+    } catch (_) {}
+
+    keyEl.addEventListener('change', () => {
+      try { sessionStorage.setItem('truefind_key', keyEl.value); } catch (_) {}
+    });
+
+    function onlyDigits(v) {
+      return String(v || '').replace(/\D/g, '');
+    }
+
+    numberEl.addEventListener('input', () => {
+      let d = onlyDigits(numberEl.value);
+      if (d.startsWith('91') && d.length > 10) d = d.slice(2);
+      if (d.length > 10) d = d.slice(0, 10);
+      numberEl.value = d;
+    });
+
+    numberEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') searchBtn.click();
+    });
+
+    function setStatus(text, type) {
+      statusEl.textContent = text || '';
+      statusEl.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    function avatarHtml(record) {
+      if (record.profileImage) {
+        return `
+          <div class="avatar-wrap">
+            <img class="avatar" src="${escapeAttr(record.profileImage)}" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+            <div class="avatar-fallback" style="display:none">${initials(record.name)}</div>
+            <div class="badge">t</div>
+          </div>`;
+      }
+      return `
+        <div class="avatar-wrap">
+          <div class="avatar-fallback">${initials(record.name)}</div>
+          <div class="badge">t</div>
+        </div>`;
+    }
+
+    function initials(name) {
+      const parts = String(name || '?').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '?';
+      if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+    function escapeAttr(s) {
+      return escapeHtml(s).replace(/'/g, '&#39;');
+    }
+
+    function renderSuccess(data) {
+      const r = data.records[0] || {};
+      const mobile = data.number || r.mobile || '';
+      resultCard.innerHTML = `
+        <div class="profile">
+          ${avatarHtml(r)}
+          <h2 class="name">${escapeHtml(r.name || 'Unknown')}</h2>
+          <p class="mobile-line">+91 ${escapeHtml(mobile)}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="info-grid">
+          <div class="info-cell">
+            <div class="info-label">Mobile</div>
+            <div class="info-value">${escapeHtml(mobile)}</div>
+          </div>
+          <div class="info-cell">
+            <div class="info-label">Address</div>
+            <div class="info-value">${escapeHtml(r.address || '—')}</div>
+          </div>
+          <div class="info-cell full">
+            <div class="info-label">Email</div>
+            <div class="info-value">${escapeHtml(r.email || '—')}</div>
+          </div>
+        </div>
+      `;
+      resultCard.classList.add('show');
+    }
+
+    function renderFailed(data) {
+      const msg = (data && data.error) ? data.error : 'Not found';
+      resultCard.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <h3>${escapeHtml(msg)}</h3>
+          <p>No profile found for this number.</p>
+        </div>
+      `;
+      resultCard.classList.add('show');
+    }
+
+    searchBtn.addEventListener('click', async () => {
+      const digits = onlyDigits(numberEl.value);
+      if (digits.length !== 10) {
+        setStatus('Enter a valid 10-digit Indian mobile number.', 'error');
+        resultCard.classList.remove('show');
+        return;
+      }
+      if (!keyEl.value.trim()) {
+        setStatus('Enter your API key.', 'error');
+        keyEl.focus();
+        return;
+      }
+
+      searchBtn.disabled = true;
+      setStatus('Searching…');
+      resultCard.classList.remove('show');
+
       try {
-        const response = await fetch('/api/search?number=' + encodeURIComponent(number.value), { headers: { 'x-api-key': key.value } });
-        const data = await response.json();
-        result.textContent = JSON.stringify(data, null, 2);
-        status.textContent = response.ok ? 'Lookup complete.' : 'Lookup failed.';
-      } catch (error) {
-        status.textContent = 'Network error.';
-        result.textContent = String(error);
-      } finally { button.disabled = false; }
+        const q = encodeURIComponent('+91' + digits);
+        const res = await fetch('/api/search?number=' + q, {
+          headers: { 'x-api-key': keyEl.value.trim() }
+        });
+        const data = await res.json();
+
+        if (data.status === 'success' && data.records && data.records.length) {
+          renderSuccess(data);
+          setStatus('Found', 'ok');
+        } else {
+          renderFailed(data);
+          setStatus(data.error || 'Not found', 'error');
+        }
+      } catch (err) {
+        renderFailed({ error: 'Network error' });
+        setStatus('Network error. Try again.', 'error');
+      } finally {
+        searchBtn.disabled = false;
+      }
     });
   </script>
 </body>
