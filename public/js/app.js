@@ -228,7 +228,7 @@
 
     const digits = onlyDigits(numberEl.value);
     if (digits.length !== 10 || !/^[6-9]/.test(digits)) {
-      setStatus('Enter a valid 10-digit Indian mobile number starting with 6–9.', 'error');
+      setStatus('Enter a valid 10-digit Indian mobile number.', 'error');
       resultCard.classList.remove('show');
       numberEl.focus();
       return;
