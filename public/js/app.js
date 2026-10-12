@@ -80,7 +80,6 @@
     return `
       <div class="avatar-wrap">
         ${image ? `<img class="avatar" src="${escapeHtml(image)}" alt="" referrerpolicy="no-referrer">${fallback}` : fallback}
-        <div class="badge" aria-label="Truecaller result">t</div>
       </div>`;
   }
 
