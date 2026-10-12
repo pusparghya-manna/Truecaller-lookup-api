@@ -7,312 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --blue: #0084ff;
-      --blue-dark: #0066cc;
-      --text: #1a1a1a;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --bg: #f5f6f8;
-      --card: #ffffff;
-      --footer: #0b3d91;
-      --danger: #dc2626;
-    }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Header */
-    .topbar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .menu-btn {
-      width: 36px; height: 36px;
-      border: 0; background: transparent;
-      border-radius: 10px;
-      display: grid; place-items: center;
-      cursor: pointer; color: #374151;
-    }
-    .menu-btn:hover { background: #f3f4f6; }
-    .brand {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--blue);
-      letter-spacing: -0.02em;
-      text-decoration: none;
-    }
-    .brand span { color: #0ea5e9; }
-
-    /* Main */
-    main {
-      width: min(480px, 100%);
-      margin: 0 auto;
-      padding: 20px 16px 40px;
-      flex: 1;
-    }
-
-    /* Search */
-    .search-wrap {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      padding: 6px 8px 6px 16px;
-      gap: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.04);
-    }
-    .prefix {
-      color: var(--muted);
-      font-weight: 500;
-      font-size: 15px;
-      user-select: none;
-    }
-    .search-wrap input {
-      flex: 1;
-      border: 0;
-      outline: none;
-      font-size: 16px;
-      font-family: inherit;
-      padding: 10px 4px;
-      min-width: 0;
-      background: transparent;
-      color: var(--text);
-    }
-    .search-btn {
-      width: 42px; height: 42px;
-      border: 0;
-      border-radius: 50%;
-      background: var(--blue);
-      color: #fff;
-      display: grid; place-items: center;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background .15s;
-    }
-    .search-btn:hover { background: var(--blue-dark); }
-    .search-btn:disabled { opacity: .6; cursor: wait; }
-
-    /* API key (compact) */
-    .key-row {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .key-row input {
-      flex: 1;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-family: inherit;
-      background: #fff;
-      color: var(--text);
-      outline: none;
-    }
-    .key-row input:focus { border-color: var(--blue); }
-    .key-row label {
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    /* Status */
-    .status {
-      margin-top: 14px;
-      min-height: 20px;
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-    }
-    .status.error { color: var(--danger); }
-    .status.ok { color: #059669; }
-
-    /* Result card */
-    .result-card {
-      margin-top: 20px;
-      background: var(--card);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(0,0,0,.05);
-      overflow: hidden;
-      display: none;
-    }
-    .result-card.show { display: block; }
-
-    .profile {
-      padding: 28px 20px 20px;
-      text-align: center;
-    }
-    .avatar-wrap {
-      width: 88px; height: 88px;
-      margin: 0 auto 14px;
-      position: relative;
-    }
-    .avatar {
-      width: 88px; height: 88px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #e5e7eb;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 12px rgba(0,0,0,.1);
-    }
-    .avatar-fallback {
-      width: 88px; height: 88px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #60a5fa, #2563eb);
-      color: #fff;
-      display: grid; place-items: center;
-      font-size: 32px;
-      font-weight: 700;
-      box-shadow: 0 2px 12px rgba(0,0,0,.1);
-    }
-    .badge {
-      position: absolute;
-      right: 0; bottom: 0;
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: var(--blue);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      display: grid; place-items: center;
-      border: 2px solid #fff;
-    }
-    .name {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: -0.02em;
-    }
-    .mobile-line {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .divider { height: 1px; background: var(--border); margin: 0 16px; }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-    .info-cell {
-      padding: 18px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .info-cell:nth-child(odd) { border-right: 1px solid var(--border); }
-    .info-cell.full {
-      grid-column: 1 / -1;
-      border-right: 0;
-    }
-    .info-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    .info-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      word-break: break-word;
-      line-height: 1.4;
-    }
-
-    /* Empty / failed */
-    .empty-state {
-      padding: 40px 24px;
-      text-align: center;
-      color: var(--muted);
-    }
-    .empty-state .icon {
-      width: 64px; height: 64px;
-      margin: 0 auto 14px;
-      border-radius: 50%;
-      background: #f3f4f6;
-      display: grid; place-items: center;
-      font-size: 28px;
-    }
-    .empty-state h3 {
-      margin: 0 0 6px;
-      color: var(--text);
-      font-size: 17px;
-    }
-    .empty-state p { margin: 0; font-size: 14px; }
-
-    /* Footer */
-    footer {
-      background: var(--footer);
-      color: rgba(255,255,255,.85);
-      padding: 28px 16px 20px;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.7;
-      margin-top: auto;
-    }
-    footer a {
-      color: rgba(255,255,255,.9);
-      text-decoration: none;
-      margin: 0 6px;
-    }
-    footer a:hover { text-decoration: underline; }
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 4px 2px;
-      max-width: 520px;
-      margin: 0 auto 16px;
-    }
-    .copy {
-      opacity: .7;
-      margin-top: 8px;
-    }
-    .social {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 14px;
-    }
-    .social a {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.12);
-      display: grid; place-items: center;
-      font-size: 16px;
-    }
-
-    @media (max-width: 400px) {
-      .info-grid { grid-template-columns: 1fr; }
-      .info-cell:nth-child(odd) { border-right: 0; }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header class="topbar">
-    <button class="menu-btn" type="button" aria-label="Menu" onclick="document.getElementById('key').focus()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
     <a class="brand" href="/">True<span>Find</span></a>
   </header>
 
@@ -321,190 +19,53 @@
       <span class="prefix">+91</span>
       <input id="number" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Mobile number" maxlength="12" value="">
       <button class="search-btn" id="search" type="button" aria-label="Search">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
           <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
         </svg>
       </button>
     </div>
 
-    <div class="key-row">
-      <label for="key">API key</label>
-      <input id="key" type="password" autocomplete="off" placeholder="Enter your API key">
-    </div>
-
     <div class="status" id="status"></div>
-
-    <div class="result-card" id="resultCard">
-      <!-- filled by JS -->
-    </div>
+    <div class="result-card" id="resultCard"></div>
   </main>
 
   <footer>
     <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Cookies</a>
-      <a href="#">Responsible Disclosure</a>
-      <a href="#">Directory</a>
-      <a href="#">Code of Conduct</a>
+      <a href="/pages/privacy.html">Privacy</a>
+      <a href="/pages/terms.html">Terms of Service</a>
+      <a href="/pages/cookies.html">Cookies</a>
+      <a href="/pages/disclosure.html">Responsible Disclosure</a>
+      <a href="/pages/directory.html">Directory</a>
+      <a href="/pages/conduct.html">Code of Conduct</a>
     </div>
     <div class="copy">© 2026 TrueFind · Developed by Pusparghya</div>
     <div class="social">
-      <a href="#" aria-label="Telegram" title="Telegram">✈</a>
-      <a href="#" aria-label="Instagram" title="Instagram">📷</a>
+      <a href="https://t.me/pusparghya" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram @pusparghya">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </a>
+      <a href="https://instagram.com/pusparghya.manna" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram @pusparghya.manna">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+      <a href="https://github.com/pusparghya-manna" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub @pusparghya-manna">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      </a>
     </div>
   </footer>
 
-  <script>
-    const numberEl = document.getElementById('number');
-    const keyEl = document.getElementById('key');
-    const searchBtn = document.getElementById('search');
-    const statusEl = document.getElementById('status');
-    const resultCard = document.getElementById('resultCard');
+  <!-- API key popup -->
+  <div class="modal-overlay" id="keyModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Enter API key</h2>
+      <p>Your API key is stored only in this browser and sent with each search. It is never shown on the page after you save it.</p>
+      <input id="modalKey" type="password" autocomplete="off" placeholder="Paste your API key">
+      <div class="modal-error" id="modalError"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="modalCancel">Cancel</button>
+        <button type="button" class="btn-primary" id="modalSave">Save &amp; continue</button>
+      </div>
+    </div>
+  </div>
 
-    // Restore key from session
-    try {
-      const saved = sessionStorage.getItem('truefind_key');
-      if (saved) keyEl.value = saved;
-    } catch (_) {}
-
-    keyEl.addEventListener('change', () => {
-      try { sessionStorage.setItem('truefind_key', keyEl.value); } catch (_) {}
-    });
-
-    function onlyDigits(v) {
-      return String(v || '').replace(/\D/g, '');
-    }
-
-    numberEl.addEventListener('input', () => {
-      let d = onlyDigits(numberEl.value);
-      if (d.startsWith('91') && d.length > 10) d = d.slice(2);
-      if (d.length > 10) d = d.slice(0, 10);
-      numberEl.value = d;
-    });
-
-    numberEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') searchBtn.click();
-    });
-
-    function setStatus(text, type) {
-      statusEl.textContent = text || '';
-      statusEl.className = 'status' + (type ? ' ' + type : '');
-    }
-
-    function avatarHtml(record) {
-      if (record.profileImage) {
-        return `
-          <div class="avatar-wrap">
-            <img class="avatar" src="${escapeAttr(record.profileImage)}" alt=""
-              onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-            <div class="avatar-fallback" style="display:none">${initials(record.name)}</div>
-            <div class="badge">t</div>
-          </div>`;
-      }
-      return `
-        <div class="avatar-wrap">
-          <div class="avatar-fallback">${initials(record.name)}</div>
-          <div class="badge">t</div>
-        </div>`;
-    }
-
-    function initials(name) {
-      const parts = String(name || '?').trim().split(/\s+/).filter(Boolean);
-      if (!parts.length) return '?';
-      if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-
-    function escapeHtml(s) {
-      return String(s ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-    function escapeAttr(s) {
-      return escapeHtml(s).replace(/'/g, '&#39;');
-    }
-
-    function renderSuccess(data) {
-      const r = data.records[0] || {};
-      const mobile = data.number || r.mobile || '';
-      resultCard.innerHTML = `
-        <div class="profile">
-          ${avatarHtml(r)}
-          <h2 class="name">${escapeHtml(r.name || 'Unknown')}</h2>
-          <p class="mobile-line">+91 ${escapeHtml(mobile)}</p>
-        </div>
-        <div class="divider"></div>
-        <div class="info-grid">
-          <div class="info-cell">
-            <div class="info-label">Mobile</div>
-            <div class="info-value">${escapeHtml(mobile)}</div>
-          </div>
-          <div class="info-cell">
-            <div class="info-label">Address</div>
-            <div class="info-value">${escapeHtml(r.address || '—')}</div>
-          </div>
-          <div class="info-cell full">
-            <div class="info-label">Email</div>
-            <div class="info-value">${escapeHtml(r.email || '—')}</div>
-          </div>
-        </div>
-      `;
-      resultCard.classList.add('show');
-    }
-
-    function renderFailed(data) {
-      const msg = (data && data.error) ? data.error : 'Not found';
-      resultCard.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">🔍</div>
-          <h3>${escapeHtml(msg)}</h3>
-          <p>No profile found for this number.</p>
-        </div>
-      `;
-      resultCard.classList.add('show');
-    }
-
-    searchBtn.addEventListener('click', async () => {
-      const digits = onlyDigits(numberEl.value);
-      if (digits.length !== 10) {
-        setStatus('Enter a valid 10-digit Indian mobile number.', 'error');
-        resultCard.classList.remove('show');
-        return;
-      }
-      if (!keyEl.value.trim()) {
-        setStatus('Enter your API key.', 'error');
-        keyEl.focus();
-        return;
-      }
-
-      searchBtn.disabled = true;
-      setStatus('Searching…');
-      resultCard.classList.remove('show');
-
-      try {
-        const q = encodeURIComponent('+91' + digits);
-        const res = await fetch('/api/search?number=' + q, {
-          headers: { 'x-api-key': keyEl.value.trim() }
-        });
-        const data = await res.json();
-
-        if (data.status === 'success' && data.records && data.records.length) {
-          renderSuccess(data);
-          setStatus('Found', 'ok');
-        } else {
-          renderFailed(data);
-          setStatus(data.error || 'Not found', 'error');
-        }
-      } catch (err) {
-        renderFailed({ error: 'Network error' });
-        setStatus('Network error. Try again.', 'error');
-      } finally {
-        searchBtn.disabled = false;
-      }
-    });
-  </script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
