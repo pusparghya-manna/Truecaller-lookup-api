@@ -117,6 +117,7 @@ function formatLookupResponse(result, e164Number) {
       total: 0,
       records: [],
       developer: 'Pusparghya',
+      error: 'Not found',
     };
   }
 
