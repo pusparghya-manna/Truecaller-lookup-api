@@ -3,75 +3,152 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>TrueFind</title>
+  <meta name="theme-color" content="#f7f9fc">
+  <meta name="description" content="A clear, simple interface for authorized Truecaller number lookups through your API.">
+  <title>TrueFind — Clear caller lookups</title>
   <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/assets/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="TrueFind home">
-      <img class="brand-logo" src="/assets/truefind-icon.png" alt="TrueFind" width="40" height="40">
-      <span class="brand-text">True<span>Find</span></span>
-    </a>
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="TrueFind home">
+        <img class="brand-logo" src="/assets/truefind-icon.png" alt="" width="42" height="42">
+        <span class="brand-text">true<span>find</span><i aria-hidden="true">.</i></span>
+      </a>
+      <div class="header-actions">
+        <span class="service-status"><span class="status-dot" aria-hidden="true"></span> API lookup</span>
+        <button class="key-button" id="manageKey" type="button" aria-haspopup="dialog">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 8V5.8a3.5 3.5 0 0 1 7 0V8M5.2 8h9.6c.7 0 1.2.5 1.2 1.2v6.1c0 .7-.5 1.2-1.2 1.2H5.2c-.7 0-1.2-.5-1.2-1.2V9.2C4 8.5 4.5 8 5.2 8Z"/><path d="M10 11v2"/></svg>
+          <span id="keyButtonLabel">Add API key</span>
+        </button>
+      </div>
+    </div>
   </header>
 
   <main>
-    <div class="search-wrap">
-      <span class="prefix">+91</span>
-      <input id="number" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Mobile number" maxlength="12" value="">
-      <button class="search-btn" id="search" type="button" aria-label="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
-        </svg>
-      </button>
-    </div>
+    <section class="hero page-width" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> CALLER LOOKUP, MADE CLEAR</div>
+        <h1 id="heroTitle">A little more<br><span>clarity</span> before<br>you pick up.</h1>
+        <p class="hero-description">Look up an Indian mobile number with your authorized Truecaller API access. Simple, focused, and right here when you need it.</p>
+        <div class="hero-note">
+          <span class="note-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20"><path d="M10 2.5 16 5v4.3c0 3.6-2.6 6.7-6 8.2-3.4-1.5-6-4.6-6-8.2V5l6-2.5Z"/><path d="m7.5 9.8 1.7 1.7 3.5-3.7"/></svg>
+          </span>
+          <span><strong>Your key stays in this browser.</strong><br>It is sent only with a lookup request to this service.</span>
+        </div>
+      </div>
 
-    <div class="status" id="status"></div>
-    <div class="result-card" id="resultCard"></div>
+      <div class="lookup-column">
+        <section class="lookup-card" aria-labelledby="lookupTitle">
+          <div class="card-heading">
+            <div>
+              <span class="section-kicker">TRUEFIND LOOKUP</span>
+              <h2 id="lookupTitle">Who’s calling?</h2>
+            </div>
+            <span class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7.3 3.7h2.2l1.1 3.7-1.7 1.7a14 14 0 0 0 6 6l1.7-1.7 3.7 1.1v2.2a2 2 0 0 1-2.2 2A16.2 16.2 0 0 1 5.3 5.9a2 2 0 0 1 2-2.2Z"/></svg>
+            </span>
+          </div>
+          <p class="card-description">Enter a 10-digit Indian mobile number to see available caller details.</p>
+
+          <form id="lookupForm" novalidate>
+            <label class="field-label" for="number">Mobile number</label>
+            <div class="search-wrap">
+              <span class="prefix" aria-hidden="true">+91</span>
+              <span class="field-divider" aria-hidden="true"></span>
+              <input id="number" name="number" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210" maxlength="14" aria-describedby="numberHint" required>
+              <button class="search-btn" id="search" type="submit" aria-label="Search number">
+                <span>Search</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+              </button>
+            </div>
+            <p class="field-hint" id="numberHint">India only · Enter digits only; +91 is added for you.</p>
+          </form>
+
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+          <div class="result-card" id="resultCard" aria-live="polite"></div>
+
+          <div class="lookup-footnote">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 6.5h.01"/></svg>
+            <span>Results can be incomplete or outdated. Use this service only for authorized lookups.</span>
+          </div>
+        </section>
+        <div class="lookup-caption"><span class="caption-line" aria-hidden="true"></span> A focused tool. No guesswork.</div>
+      </div>
+    </section>
+
+    <section class="value-strip page-width" aria-label="How TrueFind works">
+      <article class="value-item">
+        <span class="value-number">01</span>
+        <div><h3>Bring your own key</h3><p>Connect with the API key you already use.</p></div>
+      </article>
+      <article class="value-item">
+        <span class="value-number">02</span>
+        <div><h3>Search in seconds</h3><p>Enter an Indian mobile number and review the response.</p></div>
+      </article>
+      <article class="value-item">
+        <span class="value-number">03</span>
+        <div><h3>Stay in control</h3><p>Update or forget your saved key whenever you like.</p></div>
+      </article>
+    </section>
   </main>
 
   <footer>
-    <div class="footer-links">
-      <a href="/pages/privacy.html">Privacy</a>
-      <a href="/pages/terms.html">Terms of Service</a>
-      <a href="/pages/cookies.html">Cookies</a>
-      <a href="/pages/disclosure.html">Responsible Disclosure</a>
-      <a href="/pages/directory.html">Directory</a>
-      <a href="/pages/conduct.html">Code of Conduct</a>
-    </div>
-    <div class="copy">© 2026 TrueFind · Developed by Pusparghya</div>
-    <div class="social">
-      <a href="https://t.me/pusparghya" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram @pusparghya">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      </a>
-      <a href="https://instagram.com/pusparghya.manna" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram @pusparghya.manna">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-      </a>
-      <a href="https://github.com/pusparghya-manna" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub @pusparghya-manna">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-      </a>
+    <div class="footer-inner page-width">
+      <a class="footer-brand" href="/" aria-label="TrueFind home">true<span>find</span><i>.</i></a>
+      <div class="footer-meta">
+        <div class="footer-links">
+          <a href="/pages/privacy.html">Privacy</a>
+          <a href="/pages/terms.html">Terms</a>
+          <a href="/pages/cookies.html">Cookies</a>
+          <a href="/pages/disclosure.html">Disclosure</a>
+          <a href="/pages/directory.html">Directory</a>
+          <a href="/pages/conduct.html">Code of conduct</a>
+        </div>
+        <div class="copy">© 2026 TrueFind · Developed by Pusparghya</div>
+      </div>
+      <div class="social" aria-label="Social links">
+        <a href="https://t.me/pusparghya" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram @pusparghya">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://instagram.com/pusparghya.manna" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram @pusparghya.manna">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+        <a href="https://github.com/pusparghya-manna" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub @pusparghya-manna">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
     </div>
   </footer>
 
-  <!-- API key popup -->
-  <div class="modal-overlay" id="keyModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h2 id="modalTitle">Enter API key</h2>
-      <p>Your API key is stored only in this browser and sent with each search. It is never shown on the page after you save it.</p>
-      <input id="modalKey" type="password" autocomplete="off" placeholder="Paste your API key">
-      <div class="modal-error" id="modalError"></div>
+  <div class="modal-overlay hidden" id="keyModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDescription" tabindex="-1">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close API key dialog">×</button>
+      <div class="modal-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10M6 10h12c.8 0 1.5.7 1.5 1.5v7c0 .8-.7 1.5-1.5 1.5H6c-.8 0-1.5-.7-1.5-1.5v-7C4.5 10.7 5.2 10 6 10Z"/><path d="M12 14v2"/></svg>
+      </div>
+      <span class="section-kicker">YOUR ACCESS</span>
+      <h2 id="modalTitle">Connect your API key</h2>
+      <p id="modalDescription">Your key is saved only in this browser and sent with each lookup request. It is never displayed after you save it.</p>
+      <label class="field-label" for="modalKey">API key</label>
+      <input id="modalKey" type="password" autocomplete="off" placeholder="Paste your API key" spellcheck="false">
+      <div class="modal-error" id="modalError" role="alert"></div>
       <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="forgetKey" hidden>Forget key</button>
+        <span class="modal-action-spacer"></span>
         <button type="button" class="btn-ghost" id="modalCancel">Cancel</button>
-        <button type="button" class="btn-primary" id="modalSave">Save &amp; continue</button>
+        <button type="button" class="btn-primary" id="modalSave">Save key</button>
       </div>
     </div>
   </div>
 
-  <script src="/js/app.js"></script>
+  <script src="/js/app.js" defer></script>
 </body>
 </html>
