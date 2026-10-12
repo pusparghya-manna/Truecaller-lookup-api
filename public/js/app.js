@@ -124,13 +124,14 @@
   function renderFailed(data) {
     const message = data && data.error ? data.error : 'Not found';
     const generic = /not found/i.test(message);
+    const help = data && data.help ? data.help : generic ? 'There were no caller details available for this number.' : 'Check your connection and API settings, then try again.';
     resultCard.innerHTML = `
       <div class="empty-state">
         <div class="icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5M8.5 10.8h4.6"/></svg>
         </div>
         <h3>${generic ? 'No profile found' : escapeHtml(message)}</h3>
-        <p>${generic ? 'There were no caller details available for this number.' : 'Check your connection and API settings, then try again.'}</p>
+        <p>${escapeHtml(help)}</p>
       </div>`;
     resultCard.classList.add('show');
   }

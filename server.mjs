@@ -149,21 +149,107 @@ async function waitForPace() {
   lastCallAt = Date.now();
 }
 
-function runLookup(number) {
-  callQueue = callQueue.then(async () => {
-    await waitForPace();
+class LookupProviderError extends Error {
+  constructor(message, statusCode, help) {
+    super(message);
+    this.name = 'LookupProviderError';
+    this.statusCode = statusCode;
+    this.help = help;
+  }
+}
+
+function parseCliResult(output) {
+  const lines = String(output ?? '').trim().split(/\r?\n/).filter(Boolean);
+  for (const line of lines.reverse()) {
+    try {
+      const result = JSON.parse(line);
+      if (result && typeof result === 'object' && !Array.isArray(result)) return result;
+    } catch {
+      // Ignore CLI progress lines and keep looking for its JSON result.
+    }
+  }
+  return undefined;
+}
+
+function providerFailure(result) {
+  switch (result?.class) {
+    case 'auth':
+      return new LookupProviderError(
+        'Truecaller rejected the saved session.',
+        502,
+        'The site owner must refresh TRUECALLER_COOKIES_JSON in Railway Variables, then redeploy.',
+      );
+    case 'blocked':
+      return new LookupProviderError(
+        'Truecaller is challenging automated lookups.',
+        503,
+        'Wait before retrying; the site owner may need to clear a verification challenge through an authorized session.',
+      );
+    case 'rate':
+      return new LookupProviderError(
+        'Truecaller is rate-limiting lookups.',
+        429,
+        'Wait a few minutes before trying again.',
+      );
+    case 'input':
+      return new LookupProviderError('No profile was returned for this number.', 404, 'Check the number and try again.');
+    case 'drift':
+      return new LookupProviderError(
+        'Truecaller changed its search response and automatic repair did not succeed.',
+        502,
+        'The site owner needs to refresh the Truecaller search recipe in API-Anything.',
+      );
+    default:
+      return new LookupProviderError(
+        'The Truecaller lookup provider could not complete the request.',
+        502,
+        'The site owner should inspect the deployment logs and session configuration.',
+      );
+  }
+}
+
+async function runApiAnything(args, timeout = 90_000) {
+  try {
     const { stdout } = await execFileAsync(
       process.execPath,
-      [apiAnythingCli, 'call', 'truecaller', 'search', `number=${number}`],
+      [apiAnythingCli, ...args],
       {
         cwd: apiAnythingCwd,
         env: { ...process.env, API_ANYTHING_HOME: apiAnythingHome },
-        timeout: 90_000,
+        timeout,
         maxBuffer: 2 * 1024 * 1024,
       },
     );
-    const line = stdout.trim().split('\n').filter(Boolean).at(-1);
-    return enrichResult(JSON.parse(line));
+    const result = parseCliResult(stdout);
+    if (result) return result;
+  } catch (error) {
+    // API-Anything writes its structured failure to stdout and exits non-zero.
+    const result = parseCliResult(error?.stdout);
+    if (result) return result;
+  }
+  throw providerFailure({ class: 'error' });
+}
+
+function runLookup(number) {
+  // Recover the serial queue after any rejected lookup so future searches can still run.
+  callQueue = callQueue.catch(() => {}).then(async () => {
+    await waitForPace();
+    const args = ['call', 'truecaller', 'search', `number=${number}`];
+    let result = await runApiAnything(args);
+
+    // A drifted read recipe can be repaired safely; follow API-Anything's own suggested next step once.
+    if (!result.ok && result.class === 'drift') {
+      console.warn('[lookup] Truecaller search recipe drifted; attempting one read-only repair.');
+      await waitForPace();
+      const healed = await runApiAnything(['heal', 'truecaller', 'search'], 150_000);
+      result = healed.ok ? (await waitForPace(), await runApiAnything(args)) : healed;
+    }
+
+    if (!result.ok) {
+      console.warn(`[lookup] API-Anything lookup failed (${result.class || 'unknown'}).`);
+      throw providerFailure(result);
+    }
+    return enrichResult(result);
   });
   return callQueue;
 }
@@ -229,13 +315,15 @@ const server = http.createServer(async (req, res) => {
       return json(res, formatted.status === 'success' ? 200 : 404, formatted);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Lookup failed.';
-      return json(res, 400, {
+      const statusCode = error instanceof LookupProviderError ? error.statusCode : 400;
+      return json(res, statusCode, {
         status: 'failed',
         number: '',
         total: 0,
         records: [],
         developer: 'Pusparghya',
         error: message,
+        ...(error instanceof LookupProviderError ? { help: error.help } : {}),
       });
     }
   }
