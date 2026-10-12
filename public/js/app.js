@@ -266,5 +266,108 @@
     }
   });
 
+
+  // --- API docs modal ---
+  const apiDocsModal = document.getElementById('apiDocsModal');
+  const openApiDocs = document.getElementById('openApiDocs');
+  const apiDocsClose = document.getElementById('apiDocsClose');
+  const apiBaseUrlEl = document.getElementById('apiBaseUrl');
+
+  function apiBase() {
+    return window.location.origin;
+  }
+
+  function fillApiExamples() {
+    const base = apiBase();
+    const key = getKey() || 'YOUR_API_KEY';
+    if (apiBaseUrlEl) apiBaseUrlEl.textContent = base;
+
+    const curl = `curl --get '${base}/api/search' \\\n  -H 'x-api-key: ${key}' \\\n  --data-urlencode 'number=+919876543210'`;
+
+    const js = `const res = await fetch('${base}/api/search?number=' + encodeURIComponent('+919876543210'), {\n  headers: { 'x-api-key': '${key}' }\n});\nconst data = await res.json();\nconsole.log(data);`;
+
+    const py = `import requests\n\nres = requests.get(\n    "${base}/api/search",\n    params={"number": "+919876543210"},\n    headers={"x-api-key": "${key}"},\n    timeout=90,\n)\nprint(res.json())`;
+
+    const path = `${base}/api/key=${encodeURIComponent(key)}/num=9876543210`;
+
+    const map = {
+      codeCurl: curl,
+      codeJs: js,
+      codePython: py,
+      codePath: path,
+    };
+    Object.entries(map).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    });
+  }
+
+  function openApiDocsModal() {
+    fillApiExamples();
+    if (!apiDocsModal) return;
+    apiDocsModal.hidden = false;
+    apiDocsModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const focusTarget = apiDocsClose || apiDocsModal.querySelector('button');
+    if (focusTarget) focusTarget.focus();
+  }
+
+  function closeApiDocsModal() {
+    if (!apiDocsModal) return;
+    apiDocsModal.hidden = true;
+    apiDocsModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (openApiDocs) openApiDocs.focus();
+  }
+
+  if (openApiDocs) openApiDocs.addEventListener('click', openApiDocsModal);
+  if (apiDocsClose) apiDocsClose.addEventListener('click', closeApiDocsModal);
+  if (apiDocsModal) {
+    apiDocsModal.addEventListener('click', (event) => {
+      if (event.target === apiDocsModal) closeApiDocsModal();
+    });
+  }
+
+  document.querySelectorAll('.api-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const name = tab.getAttribute('data-tab');
+      document.querySelectorAll('.api-tab').forEach((t) => {
+        t.classList.toggle('is-active', t === tab);
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+      });
+      document.querySelectorAll('.api-panel').forEach((panel) => {
+        const active = panel.getAttribute('data-panel') === name;
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-copy-target');
+      const el = document.getElementById(id);
+      if (!el) return;
+      const text = el.textContent || '';
+      try {
+        await navigator.clipboard.writeText(text);
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(() => { btn.textContent = prev; }, 1200);
+      } catch {
+        btn.textContent = 'Failed';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!apiDocsModal || apiDocsModal.hidden) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeApiDocsModal();
+    }
+  });
+
   syncKeyButton();
 })();

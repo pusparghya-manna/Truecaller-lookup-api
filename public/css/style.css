@@ -51,25 +51,25 @@ button:focus-visible, a:focus-visible, input:focus-visible {
 }
 .topbar-inner {
   width: min(1240px, calc(100% - 56px));
-  min-height: 78px;
+  min-height: 96px;
   margin-inline: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
-.brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+.brand { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; }
 .brand-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   object-fit: cover;
-  box-shadow: 0 5px 12px rgba(34, 91, 160, .14);
+  box-shadow: 0 6px 16px rgba(34, 91, 160, .16);
 }
 .brand-text, .footer-brand {
   color: var(--ink);
   font-family: Manrope, "DM Sans", sans-serif;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -.075em;
   line-height: 1;
@@ -405,9 +405,9 @@ footer { flex-shrink: 0; border-top: 1px solid #e7ecf2; background: rgba(255, 25
   .footer-links { gap: 6px 13px; }
 }
 @media (max-width: 680px) {
-  .topbar-inner { width: calc(100% - 36px); min-height: 62px; }
-  .brand-logo { width: 37px; height: 37px; border-radius: 11px; }
-  .brand-text { font-size: 20px; }
+  .topbar-inner { width: calc(100% - 36px); min-height: 78px; }
+  .brand-logo { width: 48px; height: 48px; border-radius: 14px; }
+  .brand-text { font-size: 24px; }
   .header-actions { gap: 12px; }
   .service-status { display: none; }
   .key-button { min-height: 39px; padding-inline: 11px; gap: 7px; font-size: 12px; }
@@ -450,8 +450,10 @@ footer { flex-shrink: 0; border-top: 1px solid #e7ecf2; background: rgba(255, 25
 }
 
 @media (max-height: 700px) {
-  .topbar-inner { min-height: 54px; }
-  .brand-logo { width: 34px; height: 34px; }
+  .topbar-inner { min-height: 68px; }
+  .brand-logo { width: 44px; height: 44px; }
+  .brand-text { font-size: 22px; }
+  .api-docs-button span { display: none; }
   .key-button { min-height: 36px; }
   main { padding-block: 7px; }
   .lookup-card { padding-block: 15px 13px; }

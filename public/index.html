@@ -12,17 +12,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=2026-10-12-3">
+  <link rel="stylesheet" href="/css/style.css?v=2026-10-12-4">
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="/" aria-label="TrueFind home">
-        <img class="brand-logo" src="/assets/truefind-icon.png" alt="" width="42" height="42">
+        <img class="brand-logo" src="/assets/truefind-icon.png" alt="" width="56" height="56">
         <span class="brand-text">true<span>find</span><i aria-hidden="true">.</i></span>
       </a>
       <div class="header-actions">
         <span class="service-status"><span class="status-dot" aria-hidden="true"></span> API lookup</span>
+        <button class="api-docs-button" id="openApiDocs" type="button" aria-haspopup="dialog">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3h6.2L16 7.3V15.5A1.5 1.5 0 0 1 14.5 17h-9A1.5 1.5 0 0 1 4 15.5v-11Z"/><path d="M11.5 3v3.5H16M7 11h6M7 14h4"/></svg>
+          <span>Get API</span>
+        </button>
         <button class="key-button" id="manageKey" type="button" aria-haspopup="dialog">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 8V5.8a3.5 3.5 0 0 1 7 0V8M5.2 8h9.6c.7 0 1.2.5 1.2 1.2v6.1c0 .7-.5 1.2-1.2 1.2H5.2c-.7 0-1.2-.5-1.2-1.2V9.2C4 8.5 4.5 8 5.2 8Z"/><path d="M10 11v2"/></svg>
           <span id="keyButtonLabel">Add API key</span>
@@ -91,6 +95,91 @@
     </div>
   </footer>
 
+
+  <div class="modal-overlay hidden" id="apiDocsModal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="apiDocsTitle" tabindex="-1">
+      <button class="modal-close" id="apiDocsClose" type="button" aria-label="Close API docs">×</button>
+      <span class="section-kicker">INTEGRATION</span>
+      <h2 id="apiDocsTitle">Use TrueFind API</h2>
+      <p class="api-docs-lead">Call this HTTPS endpoint from any service. Replace <code>YOUR_API_KEY</code> and the number.</p>
+
+      <div class="api-base-row">
+        <div>
+          <div class="api-label">Base URL</div>
+          <code class="api-base" id="apiBaseUrl">https://your-service.up.railway.app</code>
+        </div>
+        <button type="button" class="btn-ghost btn-copy" data-copy-target="apiBaseUrl">Copy</button>
+      </div>
+
+      <div class="api-tabs" role="tablist">
+        <button type="button" class="api-tab is-active" data-tab="curl" role="tab" aria-selected="true">cURL</button>
+        <button type="button" class="api-tab" data-tab="js" role="tab" aria-selected="false">JavaScript</button>
+        <button type="button" class="api-tab" data-tab="python" role="tab" aria-selected="false">Python</button>
+        <button type="button" class="api-tab" data-tab="path" role="tab" aria-selected="false">Path form</button>
+      </div>
+
+      <div class="api-panel is-active" data-panel="curl">
+        <div class="api-code-head">
+          <span>HTTPS · GET</span>
+          <button type="button" class="btn-ghost btn-copy" data-copy-target="codeCurl">Copy</button>
+        </div>
+        <pre class="api-code" id="codeCurl"></pre>
+      </div>
+      <div class="api-panel" data-panel="js" hidden>
+        <div class="api-code-head">
+          <span>fetch()</span>
+          <button type="button" class="btn-ghost btn-copy" data-copy-target="codeJs">Copy</button>
+        </div>
+        <pre class="api-code" id="codeJs"></pre>
+      </div>
+      <div class="api-panel" data-panel="python" hidden>
+        <div class="api-code-head">
+          <span>requests</span>
+          <button type="button" class="btn-ghost btn-copy" data-copy-target="codePython">Copy</button>
+        </div>
+        <pre class="api-code" id="codePython"></pre>
+      </div>
+      <div class="api-panel" data-panel="path" hidden>
+        <div class="api-code-head">
+          <span>URL path (no header)</span>
+          <button type="button" class="btn-ghost btn-copy" data-copy-target="codePath">Copy</button>
+        </div>
+        <pre class="api-code" id="codePath"></pre>
+      </div>
+
+      <div class="api-meta">
+        <div>
+          <div class="api-label">Header</div>
+          <code>x-api-key: YOUR_API_KEY</code>
+        </div>
+        <div>
+          <div class="api-label">Endpoint</div>
+          <code>GET /api/search?number=+919876543210</code>
+        </div>
+      </div>
+
+      <details class="api-response">
+        <summary>Example success response</summary>
+        <pre class="api-code" id="codeResponse">{
+  "status": "success",
+  "number": "9876543210",
+  "total": 1,
+  "records": [
+    {
+      "record_no": 1,
+      "mobile": "9876543210",
+      "name": "Example Name",
+      "profileImage": "https://…",
+      "address": "West Bengal, India",
+      "email": "user@example.com"
+    }
+  ],
+  "developer": "Pusparghya"
+}</pre>
+      </details>
+    </div>
+  </div>
+
   <div class="modal-overlay hidden" id="keyModal" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDescription" tabindex="-1">
       <button class="modal-close" id="modalClose" type="button" aria-label="Close API key dialog">×</button>
@@ -112,6 +201,6 @@
     </div>
   </div>
 
-  <script src="/js/app.js?v=2026-10-12-3" defer></script>
+  <script src="/js/app.js?v=2026-10-12-4" defer></script>
 </body>
 </html>
