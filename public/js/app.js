@@ -283,7 +283,7 @@
   function fillApiExamples() {
     const base = apiBase();
     const endpoint = `${base}/api/search`;
-    if (apiBaseUrlEl) apiBaseUrlEl.textContent = endpoint;
+    if (apiBaseUrlEl) apiBaseUrlEl.textContent = `${base}/api/key=YOUR_API_KEY/num=`;
 
     const examples = {
       codeCurl: `curl -G '${endpoint}' \\\n+  -H 'x-api-key: YOUR_API_KEY' \\\n+  --data-urlencode 'number=+919876543210'`,
@@ -364,7 +364,11 @@
       const originalLabel = button.textContent;
       try {
         if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
-        await navigator.clipboard.writeText(target.textContent || '');
+        const savedKey = target.id === 'apiBaseUrl' ? getKey() : '';
+        const value = savedKey
+          ? `${apiBase()}/api/key=${encodeURIComponent(savedKey)}/num=`
+          : target.textContent || '';
+        await navigator.clipboard.writeText(value);
         button.textContent = 'Copied';
       } catch {
         button.textContent = 'Copy failed';

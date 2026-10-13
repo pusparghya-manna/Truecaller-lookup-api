@@ -778,3 +778,81 @@ footer { background: rgba(255, 255, 255, .82); }
   .modal-wide.api-modal { max-height: min(92dvh, 620px); padding-block: 16px; }
   .api-code { max-height: min(160px, 24dvh); }
 }
+
+
+/* Final compact viewport refinements: keep site identity visible at every height. */
+footer { flex-shrink: 0; }
+.footer-inner { min-height: 82px; gap: 20px; }
+.footer-brand { font-size: 18px; }
+.footer-meta { gap: 7px; }
+.footer-links a { font-size: 11px; }
+.copy { display: block; color: #7d8b9b; font-size: 11px; }
+.social { gap: 8px; }
+.social a { width: 34px; height: 34px; border-radius: 11px; }
+.social svg { width: 15px; height: 15px; }
+
+@media (max-width: 680px) {
+  .topbar-inner { width: calc(100% - 20px); min-height: 60px; gap: 6px; }
+  .brand { gap: 6px; flex: 0 1 auto; }
+  .brand-logo { width: 36px; height: 36px; }
+  .brand-text { font-size: 18px; white-space: nowrap; }
+  .header-actions { flex: 0 0 auto; gap: 6px; }
+  .api-docs-button, .key-button { min-height: 36px; flex-shrink: 0; gap: 5px; padding-inline: 8px; font-size: 11px; white-space: nowrap; }
+  .key-button #keyButtonLabel { display: inline; max-width: none; overflow: visible; text-overflow: clip; white-space: nowrap; }
+
+  .footer-inner {
+    width: calc(100% - 24px);
+    min-height: 94px;
+    padding-block: 9px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand social" "meta meta";
+    align-items: center;
+    gap: 6px 10px;
+  }
+  .footer-brand { grid-area: brand; display: block; font-size: 15px; }
+  .footer-meta { grid-area: meta; display: flex; width: 100%; min-width: 0; align-items: center; gap: 5px; }
+  .footer-links { justify-content: center; flex-wrap: wrap; gap: 5px 9px; }
+  .footer-links a { font-size: 9px; white-space: nowrap; }
+  .copy { display: block; text-align: center; font-size: 9px; }
+  .social { grid-area: social; display: flex; justify-self: end; gap: 6px; }
+  .social a { width: 30px; height: 30px; }
+}
+
+@media (max-width: 370px) {
+  .topbar-inner { width: calc(100% - 16px); gap: 5px; }
+  .brand { gap: 5px; }
+  .brand-logo { width: 32px; height: 32px; }
+  .brand-text { font-size: 16px; }
+  .header-actions { gap: 5px; }
+  .api-docs-button, .key-button { gap: 4px; padding-inline: 6px; font-size: 10px; }
+  .api-docs-button svg, .key-button svg { width: 13px; height: 13px; }
+  .footer-inner { width: calc(100% - 16px); gap: 5px 8px; }
+  .footer-links { gap: 5px 7px; }
+  .footer-links a, .copy { font-size: 8.5px; }
+}
+
+@media (max-height: 700px) {
+  footer .footer-inner {
+    min-height: 88px;
+    padding-block: 8px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand social" "meta meta";
+    gap: 5px 8px;
+  }
+  footer .footer-brand { display: block; grid-area: brand; }
+  footer .social { display: flex; grid-area: social; }
+  footer .footer-meta { display: flex; grid-area: meta; width: 100%; align-items: center; gap: 4px; }
+  footer .footer-links { justify-content: center; flex-wrap: wrap; gap: 4px 8px; }
+  footer .footer-links a { font-size: 9px; white-space: nowrap; }
+  footer .copy { display: block; font-size: 9px; text-align: center; }
+}
+
+@media (max-height: 520px) {
+  footer .footer-inner { min-height: 74px; padding-block: 5px; }
+  .footer-brand { font-size: 14px; }
+  .social a { width: 26px; height: 26px; }
+  .social svg { width: 12px; height: 12px; }
+  .footer-links a, .copy { font-size: 8px; }
+}
