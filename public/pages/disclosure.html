@@ -2,36 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f9fc">
   <title>Responsible Disclosure · TrueFind</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="stylesheet" href="/css/pages.css?v=2026-10-13-1">
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/" aria-label="TrueFind home">
-    <img class="brand-logo" src="/assets/truefind-icon.png" alt="TrueFind" width="32" height="32">
-    <span class="brand-text">True<span>Find</span></span>
-  </a></header>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="policy-brand" href="/" aria-label="TrueFind home"><img src="/assets/truefind-icon.png" alt="" width="34" height="34"><span>true<span>find</span><i>.</i></span></a>
+      <a class="topbar-return" href="/">Back to lookup <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
   <main>
-    <h1>Responsible Disclosure</h1>
-    <p class="updated">Last updated: October 12, 2026</p>
-
-    <p>We appreciate responsible reports of security issues in TrueFind.</p>
-    <h2>How to report</h2>
-    <ul>
-      <li>Contact <a href="https://t.me/pusparghya" target="_blank" rel="noopener">@pusparghya</a> on Telegram or open an issue / private advisory on <a href="https://github.com/pusparghya-manna" target="_blank" rel="noopener">GitHub</a>.</li>
-      <li>Include steps to reproduce, impact, and any proof-of-concept if available.</li>
-    </ul>
-    <h2>Guidelines</h2>
-    <ul>
-      <li>Do not access or modify data that is not yours.</li>
-      <li>Do not perform denial-of-service testing against production without prior agreement.</li>
-      <li>Allow reasonable time for a fix before public disclosure.</li>
-    </ul>
-    <p>Good-faith researchers will not face legal action for reports that follow these guidelines.</p>
-
-    <p><a class="back" href="/">← Back to TrueFind</a></p>
+    <article class="policy-card" aria-labelledby="pageTitle">
+      <div class="policy-heading">
+        <div><span class="policy-kicker">TRUEFIND · SECURITY</span><h1 id="pageTitle">Responsible Disclosure</h1></div>
+        <time class="updated" datetime="2026-10-13">Updated Oct 13, 2026</time>
+      </div>
+      <p class="policy-lead">We welcome good-faith reports that help keep TrueFind safe.</p>
+      <div class="policy-grid">
+        <section class="policy-section">
+          <h2>How to report</h2>
+          <p>Contact <a href="https://t.me/pusparghya" target="_blank" rel="noopener noreferrer">Pusparghya on Telegram</a> or use <a href="https://github.com/pusparghya-manna/Truecaller-lookup-api" target="_blank" rel="noopener noreferrer">GitHub</a>. Include steps to reproduce, impact, and a minimal proof of concept.</p>
+        </section>
+        <section class="policy-section">
+          <h2>Safe testing</h2>
+          <p>Test only what you are authorized to access. Do not view or change others’ data, disrupt production, or publish details before allowing reasonable time for a fix.</p>
+        </section>
+      </div>
+      <a class="policy-back" href="/">← Return to TrueFind</a>
+    </article>
   </main>
 </body>
 </html>
