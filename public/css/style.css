@@ -306,8 +306,8 @@ main {
 .avatar { background: #e6eef8; }
 .avatar-fallback { display: grid; place-items: center; background: linear-gradient(145deg, #75b4fa, #397ce0); color: #fff; font-size: 18px; font-weight: 700; }
 .badge { position: absolute; right: -5px; bottom: -4px; width: 21px; height: 21px; display: grid; place-items: center; border: 2px solid #fbfcfe; border-radius: 50%; background: var(--blue); color: white; font-size: 10px; font-weight: 800; }
-.name { align-self: end; overflow-wrap: anywhere; color: #26384e; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -.035em; }
-.mobile-line { align-self: start; margin: 4px 0 0; color: #77879a; font-size: 12px; }
+.name { align-self: end; overflow-wrap: anywhere; margin: 0; color: #26384e; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -.035em; line-height: 1.15; }
+.mobile-line { align-self: start; margin: 2px 0 0; color: #77879a; font-size: 12px; line-height: 1.25; }
 .divider { height: 1px; margin: 0 16px; background: #e9edf3; }
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; }
 .info-cell { min-width: 0; padding: 13px 16px; border-bottom: 1px solid #e9edf3; }

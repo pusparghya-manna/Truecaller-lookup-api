@@ -2,32 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f9fc">
   <title>Directory Notice · TrueFind</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="stylesheet" href="/css/pages.css?v=2026-10-13-1">
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/" aria-label="TrueFind home">
-    <img class="brand-logo" src="/assets/truefind-icon.png" alt="TrueFind" width="32" height="32">
-    <span class="brand-text">True<span>Find</span></span>
-  </a></header>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="policy-brand" href="/" aria-label="TrueFind home"><img src="/assets/truefind-icon.png" alt="" width="34" height="34"><span>true<span>find</span><i>.</i></span></a>
+      <a class="topbar-return" href="/">Back to lookup <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
   <main>
-    <h1>Directory Notice</h1>
-    <p class="updated">Last updated: October 12, 2026</p>
-
-    <p>TrueFind is not an official Truecaller product and is not affiliated with Truecaller AB.</p>
-    <h2>About results</h2>
-    <ul>
-      <li>Displayed names, photos, emails, and addresses come from directory sources available to the authenticated session used by the operator.</li>
-      <li>Data may change or be removed by the original provider at any time.</li>
-      <li>This site does not claim ownership of directory content.</li>
-    </ul>
-    <h2>Your rights</h2>
-    <p>If you believe information about you should not be shown through tools like this, contact the original directory provider and also reach out to <a href="https://t.me/pusparghya" target="_blank" rel="noopener">@pusparghya</a> so access policies can be reviewed.</p>
-
-    <p><a class="back" href="/">← Back to TrueFind</a></p>
+    <article class="policy-card" aria-labelledby="pageTitle">
+      <div class="policy-heading">
+        <div><span class="policy-kicker">TRUEFIND · DIRECTORY</span><h1 id="pageTitle">Directory Notice</h1></div>
+        <time class="updated" datetime="2026-10-13">Updated Oct 13, 2026</time>
+      </div>
+      <p class="policy-lead">TrueFind is an independent service, not an official Truecaller product and not affiliated with Truecaller AB.</p>
+      <div class="policy-grid">
+        <section class="policy-section">
+          <h2>About results</h2>
+          <p>Names and other details are returned by external directory sources. Data can change, be incomplete, or be removed by its provider. TrueFind does not claim ownership of that content.</p>
+        </section>
+        <section class="policy-section">
+          <h2>Corrections and removal</h2>
+          <p>For changes to a listing, contact the original provider and <a href="https://t.me/pusparghya" target="_blank" rel="noopener noreferrer">Pusparghya</a> so the service’s access policies can be reviewed.</p>
+        </section>
+      </div>
+      <a class="policy-back" href="/">← Return to TrueFind</a>
+    </article>
   </main>
 </body>
 </html>

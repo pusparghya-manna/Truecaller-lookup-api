@@ -2,36 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f9fc">
+  <title>Cookies &amp; Browser Storage · TrueFind</title>
   <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
-  <title>Cookies Notice · TrueFind</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/pages.css?v=2026-10-13-1">
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/" aria-label="TrueFind home">
-    <img class="brand-logo" src="/assets/truefind-icon.png" alt="TrueFind" width="32" height="32">
-    <span class="brand-text">True<span>Find</span></span>
-  </a></header>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="policy-brand" href="/" aria-label="TrueFind home"><img src="/assets/truefind-icon.png" alt="" width="34" height="34"><span>true<span>find</span><i>.</i></span></a>
+      <a class="topbar-return" href="/">Back to lookup <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
   <main>
-    <h1>Cookies Notice</h1>
-    <p class="updated">Last updated: October 12, 2026</p>
-
-    <p>TrueFind uses minimal client-side storage.</p>
-    <h2>What we store</h2>
-    <ul>
-      <li><strong>localStorage – API key:</strong> saved only after you enter it in the popup, so you do not need to type it on every visit. It never leaves your browser except as the <code>x-api-key</code> header on search requests.</li>
-    </ul>
-    <h2>What we do not use</h2>
-    <ul>
-      <li>No advertising cookies.</li>
-      <li>No third-party tracking pixels.</li>
-      <li>No analytics cookies by default.</li>
-    </ul>
-    <h2>Clearing data</h2>
-    <p>You can clear site data in your browser settings to remove the stored API key.</p>
-
-    <p><a class="back" href="/">← Back to TrueFind</a></p>
+    <article class="policy-card" aria-labelledby="pageTitle">
+      <div class="policy-heading">
+        <div><span class="policy-kicker">TRUEFIND · STORAGE</span><h1 id="pageTitle">Cookies &amp; Browser Storage</h1></div>
+        <time class="updated" datetime="2026-10-13">Updated Oct 13, 2026</time>
+      </div>
+      <p class="policy-lead">TrueFind uses only the browser storage needed to remember your preference.</p>
+      <div class="policy-grid">
+        <section class="policy-section policy-wide">
+          <h2>API key storage</h2>
+          <p>Your API key is saved in this browser’s <code>localStorage</code> after you choose to save it. The site sends it in the <code>x-api-key</code> header on lookup requests; it is not stored as an HTTP cookie.</p>
+        </section>
+        <section class="policy-section">
+          <h2>Cookies</h2>
+          <p>TrueFind does not use advertising or analytics cookies.</p>
+        </section>
+        <section class="policy-section">
+          <h2>Clear saved data</h2>
+          <p>Use <strong>Manage API key → Forget key</strong>, or clear TrueFind’s site data in your browser settings.</p>
+        </section>
+      </div>
+      <a class="policy-back" href="/">← Return to TrueFind</a>
+    </article>
   </main>
 </body>
 </html>
