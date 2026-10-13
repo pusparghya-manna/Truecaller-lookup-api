@@ -12,13 +12,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=2026-10-12-6">
+  <link rel="stylesheet" href="/css/style.css?v=2026-10-13-1">
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="/" aria-label="TrueFind home">
-        <img class="brand-logo" src="/assets/truefind-icon.png" alt="" width="48" height="48">
+        <img class="brand-logo" src="/assets/truefind-icon.png" alt="" width="42" height="42">
         <span class="brand-text">true<span>find</span><i aria-hidden="true">.</i></span>
       </a>
       <div class="header-actions">
@@ -50,7 +50,7 @@
           <svg viewBox="0 0 24 24"><path d="M7.3 3.7h2.2l1.1 3.7-1.7 1.7a14 14 0 0 0 6 6l1.7-1.7 3.7 1.1v2.2a2 2 0 0 1-2.2 2A16.2 16.2 0 0 1 5.3 5.9a2 2 0 0 1 2-2.2Z"/></svg>
         </span>
       </div>
-      <p class="card-description">Enter a 10-digit Indian mobile number to see available caller details.</p>
+      <p class="card-description">Enter a 10-digit Indian mobile number.</p>
 
       <form id="lookupForm" novalidate>
         <label class="field-label" for="number">Mobile number</label>
@@ -101,69 +101,69 @@
 
 
   <div class="modal-overlay hidden" id="apiDocsModal" hidden>
-    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="apiDocsTitle" tabindex="-1">
-      <button class="modal-close" id="apiDocsClose" type="button" aria-label="Close API docs">×</button>
-      <span class="section-kicker">INTEGRATION</span>
-      <h2 id="apiDocsTitle">Use TrueFind API</h2>
-      <p class="api-docs-lead">Use these ready-made HTTPS examples in your app. Replace the key and number as needed.</p>
+    <section class="modal modal-wide api-modal" role="dialog" aria-modal="true" aria-labelledby="apiDocsTitle" aria-describedby="apiDocsDescription" tabindex="-1">
+      <button class="modal-close" id="apiDocsClose" type="button" aria-label="Close API guide">×</button>
+      <div class="api-modal-heading">
+        <div>
+          <span class="section-kicker">DEVELOPER QUICKSTART</span>
+          <h2 id="apiDocsTitle">TrueFind, in your stack.</h2>
+          <p class="api-docs-lead" id="apiDocsDescription">One secure endpoint. Choose a language and add your API key.</p>
+        </div>
+        <span class="api-secure-chip"><span aria-hidden="true"></span> HTTPS</span>
+      </div>
 
       <div class="api-base-row">
-        <div>
-          <div class="api-label">Base URL</div>
-          <code class="api-base" id="apiBaseUrl">https://your-service.up.railway.app</code>
+        <div class="api-endpoint-copy">
+          <span class="api-label">LIVE ENDPOINT · GET</span>
+          <code class="api-base" id="apiBaseUrl">https://truecaller-lookup-api-production.up.railway.app/api/search</code>
         </div>
-        <button type="button" class="btn-ghost btn-copy" data-copy-target="apiBaseUrl">Copy</button>
-      </div>
-
-      <div class="api-tabs" role="tablist">
-        <button type="button" class="api-tab is-active" data-tab="curl" role="tab" aria-selected="true">cURL</button>
-        <button type="button" class="api-tab" data-tab="js" role="tab" aria-selected="false">JavaScript</button>
-        <button type="button" class="api-tab" data-tab="python" role="tab" aria-selected="false">Python</button>
-        <button type="button" class="api-tab" data-tab="path" role="tab" aria-selected="false">Path form</button>
-      </div>
-
-      <div class="api-panel is-active" data-panel="curl">
-        <div class="api-code-head">
-          <span>HTTPS · GET</span>
-          <button type="button" class="btn-ghost btn-copy" data-copy-target="codeCurl">Copy</button>
-        </div>
-        <pre class="api-code" id="codeCurl"></pre>
-      </div>
-      <div class="api-panel" data-panel="js" hidden>
-        <div class="api-code-head">
-          <span>fetch()</span>
-          <button type="button" class="btn-ghost btn-copy" data-copy-target="codeJs">Copy</button>
-        </div>
-        <pre class="api-code" id="codeJs"></pre>
-      </div>
-      <div class="api-panel" data-panel="python" hidden>
-        <div class="api-code-head">
-          <span>requests</span>
-          <button type="button" class="btn-ghost btn-copy" data-copy-target="codePython">Copy</button>
-        </div>
-        <pre class="api-code" id="codePython"></pre>
-      </div>
-      <div class="api-panel" data-panel="path" hidden>
-        <div class="api-code-head">
-          <span>URL path (no header)</span>
-          <button type="button" class="btn-ghost btn-copy" data-copy-target="codePath">Copy</button>
-        </div>
-        <pre class="api-code" id="codePath"></pre>
+        <button type="button" class="btn-ghost btn-copy" data-copy-target="apiBaseUrl">Copy URL</button>
       </div>
 
       <div class="api-meta">
-        <div>
-          <div class="api-label">Header</div>
+        <div class="api-meta-cell">
+          <span class="api-label">Authentication</span>
           <code>x-api-key: YOUR_API_KEY</code>
         </div>
-        <div>
-          <div class="api-label">Endpoint</div>
-          <code>GET /api/search?number=+919876543210</code>
+        <div class="api-meta-cell">
+          <span class="api-label">Number</span>
+          <code>+919876543210</code>
         </div>
       </div>
 
+      <div class="api-code-head">
+        <div>
+          <span class="api-code-title">Ready-to-use example</span>
+          <span class="api-code-subtitle">Replace the key placeholder before running.</span>
+        </div>
+        <button type="button" class="btn-primary btn-copy" id="copyActiveSnippet" data-copy-target="codeCurl">Copy snippet</button>
+      </div>
+
+      <div class="api-tabs" role="tablist" aria-label="Choose an API example language">
+        <button type="button" class="api-tab is-active" id="tab-curl" data-tab="curl" role="tab" aria-controls="panel-curl" aria-selected="true" tabindex="0">cURL</button>
+        <button type="button" class="api-tab" id="tab-js" data-tab="js" role="tab" aria-controls="panel-js" aria-selected="false" tabindex="-1">JavaScript</button>
+        <button type="button" class="api-tab" id="tab-python" data-tab="python" role="tab" aria-controls="panel-python" aria-selected="false" tabindex="-1">Python</button>
+        <button type="button" class="api-tab" id="tab-php" data-tab="php" role="tab" aria-controls="panel-php" aria-selected="false" tabindex="-1">PHP</button>
+      </div>
+
+      <div class="api-panels">
+        <div class="api-panel is-active" id="panel-curl" role="tabpanel" aria-labelledby="tab-curl">
+          <pre class="api-code" id="codeCurl"></pre>
+        </div>
+        <div class="api-panel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+          <pre class="api-code" id="codeJs"></pre>
+        </div>
+        <div class="api-panel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+          <pre class="api-code" id="codePython"></pre>
+        </div>
+        <div class="api-panel" id="panel-php" role="tabpanel" aria-labelledby="tab-php" hidden>
+          <pre class="api-code" id="codePhp"></pre>
+        </div>
+      </div>
+
+      <p class="api-key-note">Keep real API keys on your server—never hard-code them in public browser code.</p>
       <details class="api-response">
-        <summary>Example success response</summary>
+        <summary>View sample response</summary>
         <pre class="api-code" id="codeResponse">{
   "status": "success",
   "number": "9876543210",
@@ -181,7 +181,7 @@
   "developer": "Pusparghya"
 }</pre>
       </details>
-    </div>
+    </section>
   </div>
 
   <div class="modal-overlay hidden" id="keyModal" hidden>
@@ -205,6 +205,6 @@
     </div>
   </div>
 
-  <script src="/js/app.js?v=2026-10-12-6" defer></script>
+  <script src="/js/app.js?v=2026-10-13-1" defer></script>
 </body>
 </html>

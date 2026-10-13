@@ -266,105 +266,132 @@
   });
 
 
-  // --- API docs modal ---
+  // --- Compact API quickstart ---
   const apiDocsModal = document.getElementById('apiDocsModal');
+  const apiDialog = apiDocsModal?.querySelector('[role="dialog"]');
   const openApiDocs = document.getElementById('openApiDocs');
   const apiDocsClose = document.getElementById('apiDocsClose');
   const apiBaseUrlEl = document.getElementById('apiBaseUrl');
+  const copyActiveSnippet = document.getElementById('copyActiveSnippet');
+  const apiTabs = [...document.querySelectorAll('.api-tab')];
+  let apiReturnFocus = null;
 
   function apiBase() {
-    return window.location.origin;
+    return window.location.origin.replace(/\/$/, '');
   }
 
   function fillApiExamples() {
     const base = apiBase();
-    const key = getKey() || 'YOUR_API_KEY';
-    if (apiBaseUrlEl) apiBaseUrlEl.textContent = base;
+    const endpoint = `${base}/api/search`;
+    if (apiBaseUrlEl) apiBaseUrlEl.textContent = endpoint;
 
-    const curl = `curl --get '${base}/api/search' \\\n  -H 'x-api-key: ${key}' \\\n  --data-urlencode 'number=+919876543210'`;
-
-    const js = `const res = await fetch('${base}/api/search?number=' + encodeURIComponent('+919876543210'), {\n  headers: { 'x-api-key': '${key}' }\n});\nconst data = await res.json();\nconsole.log(data);`;
-
-    const py = `import requests\n\nres = requests.get(\n    "${base}/api/search",\n    params={"number": "+919876543210"},\n    headers={"x-api-key": "${key}"},\n    timeout=90,\n)\nprint(res.json())`;
-
-    const path = `${base}/api/key=${encodeURIComponent(key)}/num=9876543210`;
-
-    const map = {
-      codeCurl: curl,
-      codeJs: js,
-      codePython: py,
-      codePath: path,
+    const examples = {
+      codeCurl: `curl -G '${endpoint}' \\\n+  -H 'x-api-key: YOUR_API_KEY' \\\n+  --data-urlencode 'number=+919876543210'`,
+      codeJs: `const url = new URL('${endpoint}');\nurl.searchParams.set('number', '+919876543210');\n\nconst response = await fetch(url, {\n  headers: { 'x-api-key': 'YOUR_API_KEY' }\n});\nconsole.log(await response.json());`,
+      codePython: `import requests\n\nres = requests.get(\n    '${endpoint}', params={'number': '+919876543210'},\n    headers={'x-api-key': 'YOUR_API_KEY'}, timeout=90)\nprint(res.json())`,
+      codePhp: `<?php\n$url = '${endpoint}?' . http_build_query(['number' => '+919876543210']);\n$context = stream_context_create(['http' => ['header' => "x-api-key: YOUR_API_KEY\\r\\n"]]);\necho file_get_contents($url, false, $context);`,
     };
-    Object.entries(map).forEach(([id, text]) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
+    examples.codeCurl = examples.codeCurl.replace(/\n\+/g, '\n');
+
+    Object.entries(examples).forEach(([id, text]) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = text;
     });
   }
 
+  function activateApiTab(tab, moveFocus = false) {
+    const name = tab?.dataset.tab;
+    if (!name) return;
+    apiTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-selected', String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    document.querySelectorAll('.api-panel').forEach((panel) => {
+      const active = panel.id === `panel-${name}`;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+    const codeIds = { curl: 'codeCurl', js: 'codeJs', python: 'codePython', php: 'codePhp' };
+    if (copyActiveSnippet && codeIds[name]) copyActiveSnippet.dataset.copyTarget = codeIds[name];
+    if (moveFocus) tab.focus();
+  }
+
   function openApiDocsModal() {
-    fillApiExamples();
     if (!apiDocsModal) return;
+    apiReturnFocus = openApiDocs || document.activeElement;
+    fillApiExamples();
     apiDocsModal.hidden = false;
     apiDocsModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    const focusTarget = apiDocsClose || apiDocsModal.querySelector('button');
-    if (focusTarget) focusTarget.focus();
+    if (openApiDocs) openApiDocs.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => apiDocsClose?.focus());
   }
 
   function closeApiDocsModal() {
     if (!apiDocsModal) return;
     apiDocsModal.hidden = true;
     apiDocsModal.classList.add('hidden');
-    document.body.style.overflow = '';
-    if (openApiDocs) openApiDocs.focus();
+    if (openApiDocs) openApiDocs.setAttribute('aria-expanded', 'false');
+    if (apiReturnFocus && typeof apiReturnFocus.focus === 'function') apiReturnFocus.focus();
+    apiReturnFocus = null;
   }
 
-  if (openApiDocs) openApiDocs.addEventListener('click', openApiDocsModal);
-  if (apiDocsClose) apiDocsClose.addEventListener('click', closeApiDocsModal);
-  if (apiDocsModal) {
-    apiDocsModal.addEventListener('click', (event) => {
-      if (event.target === apiDocsModal) closeApiDocsModal();
-    });
-  }
+  openApiDocs?.addEventListener('click', openApiDocsModal);
+  apiDocsClose?.addEventListener('click', closeApiDocsModal);
+  apiDocsModal?.addEventListener('click', (event) => {
+    if (event.target === apiDocsModal) closeApiDocsModal();
+  });
 
-  document.querySelectorAll('.api-tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const name = tab.getAttribute('data-tab');
-      document.querySelectorAll('.api-tab').forEach((t) => {
-        t.classList.toggle('is-active', t === tab);
-        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
-      });
-      document.querySelectorAll('.api-panel').forEach((panel) => {
-        const active = panel.getAttribute('data-panel') === name;
-        panel.classList.toggle('is-active', active);
-        panel.hidden = !active;
-      });
+  apiTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateApiTab(tab));
+    tab.addEventListener('keydown', (event) => {
+      let nextIndex = index;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % apiTabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + apiTabs.length) % apiTabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = apiTabs.length - 1;
+      else return;
+      event.preventDefault();
+      activateApiTab(apiTabs[nextIndex], true);
     });
   });
 
-  document.querySelectorAll('[data-copy-target]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-      const id = btn.getAttribute('data-copy-target');
-      const el = document.getElementById(id);
-      if (!el) return;
-      const text = el.textContent || '';
+  document.querySelectorAll('[data-copy-target]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const target = document.getElementById(button.dataset.copyTarget);
+      if (!target) return;
+      const originalLabel = button.textContent;
       try {
-        await navigator.clipboard.writeText(text);
-        const prev = btn.textContent;
-        btn.textContent = 'Copied';
-        setTimeout(() => { btn.textContent = prev; }, 1200);
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(target.textContent || '');
+        button.textContent = 'Copied';
       } catch {
-        btn.textContent = 'Failed';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+        button.textContent = 'Copy failed';
       }
+      window.setTimeout(() => { button.textContent = originalLabel; }, 1400);
     });
   });
 
-  document.addEventListener('keydown', (event) => {
-    if (!apiDocsModal || apiDocsModal.hidden) return;
+  apiDocsModal?.addEventListener('keydown', (event) => {
+    if (apiDocsModal.hidden) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       closeApiDocsModal();
+      return;
+    }
+    if (event.key !== 'Tab' || !apiDialog) return;
+    const focusable = [...apiDialog.querySelectorAll('button:not([disabled]), summary, [href], input:not([disabled]), [tabindex="0"]')]
+      .filter((element) => element.getClientRects().length > 0);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 

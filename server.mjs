@@ -29,6 +29,7 @@ function json(res, status, body) {
     'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'content-type, x-api-key',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   });
   res.end(payload);
 }
@@ -212,7 +213,12 @@ async function serveStatic(req, res, pathname) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type, x-api-key' });
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'content-type, x-api-key',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Max-Age': '600',
+    });
     return res.end();
   }
   if (url.pathname === '/health') return json(res, 200, { ok: true, service: 'truecaller-api' });
