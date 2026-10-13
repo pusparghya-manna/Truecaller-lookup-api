@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css?v=2026-10-13-1">
+  <link rel="stylesheet" href="/css/style.css?v=2026-10-13-2">
 </head>
 <body>
   <header class="topbar">
@@ -114,8 +114,8 @@
 
       <div class="api-base-row">
         <div class="api-endpoint-copy">
-          <span class="api-label">LIVE ENDPOINT · GET</span>
-          <code class="api-base" id="apiBaseUrl">https://truecaller-lookup-api-production.up.railway.app/api/search</code>
+          <span class="api-label">API URL PREFIX · GET</span>
+          <code class="api-base" id="apiBaseUrl">https://truecaller-lookup-api-production.up.railway.app/api/key=YOUR_API_KEY/num=</code>
         </div>
         <button type="button" class="btn-ghost btn-copy" data-copy-target="apiBaseUrl">Copy URL</button>
       </div>
@@ -161,7 +161,7 @@
         </div>
       </div>
 
-      <p class="api-key-note">Keep real API keys on your server—never hard-code them in public browser code.</p>
+      <p class="api-key-note">When a key is saved here, Copy URL inserts it into the path. URL-based keys can be logged; prefer the x-api-key examples when possible.</p>
       <details class="api-response">
         <summary>View sample response</summary>
         <pre class="api-code" id="codeResponse">{
@@ -205,6 +205,6 @@
     </div>
   </div>
 
-  <script src="/js/app.js?v=2026-10-13-1" defer></script>
+  <script src="/js/app.js?v=2026-10-13-2" defer></script>
 </body>
 </html>
